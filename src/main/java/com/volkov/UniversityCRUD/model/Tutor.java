@@ -28,7 +28,7 @@ public class Tutor {
 
     @Column(name = "age")
     @JsonProperty("Age")
-    private int age;
+    private Integer age;
 
     //one-to-one
     @OneToOne(cascade = CascadeType.DETACH)
