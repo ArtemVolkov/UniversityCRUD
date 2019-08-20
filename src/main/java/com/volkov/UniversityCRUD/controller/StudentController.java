@@ -13,6 +13,7 @@ import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @RestController
 public class StudentController {
@@ -33,6 +34,16 @@ public class StudentController {
             studentsRepository.deleteById(id);
 
         return convertToJson(student.orElse(new Student()));
+    }
+
+    @GetMapping("/student/getsubjectcount/{id}")
+    String getStudentSubjectsCount(@PathVariable @NotNull @DecimalMin("1") Long id) throws JsonProcessingException {
+        Optional<Student> student = studentsRepository.findById(id);
+
+        AtomicInteger studentSubjectsCount = new AtomicInteger();
+        student.ifPresent(student1 -> studentSubjectsCount.set(student1.getGroup().getSubjects().size()));
+
+        return convertToJson(studentSubjectsCount);
     }
 
     private String convertToJson(Object all) throws JsonProcessingException {
