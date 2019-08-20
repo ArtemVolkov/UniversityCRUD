@@ -16,7 +16,7 @@ public class Tutor {
 
     @Id
     @GeneratedValue
-    @Column(name = "tutor_id")
+    @Column(name = "tut_id")
     @JsonProperty("Tutor id")
     private long id;
     @Column(name = "full_name")
@@ -32,7 +32,7 @@ public class Tutor {
 
     //one-to-one
     @OneToOne(cascade = CascadeType.DETACH)
-    @JoinColumn(name = "tutor_id", referencedColumnName = "tutor_id")
+    @JoinColumn(name = "subject_id")
     private Subject subject;
 
 
