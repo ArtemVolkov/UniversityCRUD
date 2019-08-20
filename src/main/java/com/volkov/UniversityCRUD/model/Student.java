@@ -28,6 +28,18 @@ public class Student {
     @JsonProperty("Phone")
     private String phone;
 
+    @Column(name = "mark")
+    @JsonProperty("Mark")
+    private String mark;
+
+    @Column(name = "age")
+    @JsonProperty("Age")
+    private int age;
+
+    @Column(name = "sex")
+    @JsonProperty("Sex")
+    private String sex;
+
     //many-to-one
     @ManyToOne(fetch = FetchType.EAGER,cascade = CascadeType.ALL)
     @JoinColumn(name = "group_id")
