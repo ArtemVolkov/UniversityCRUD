@@ -47,7 +47,7 @@ public class StudentController {
         Optional<Student> student = studentsRepository.findById(id);
 
         AtomicInteger studentSubjectsCount = new AtomicInteger();
-        student.ifPresent(student1 -> studentSubjectsCount.set(student1.getGroup().getSubjects().size()));
+        student.ifPresent(student1 -> studentSubjectsCount.set(getStudentSubjects(student1).size()));
 
         return convertToJson(studentSubjectsCount);
     }
@@ -60,13 +60,44 @@ public class StudentController {
             return convertToJson(new ArrayList<String>());
 
         AtomicReference<List<String>> teachers = new AtomicReference<>();
-        student.ifPresent(student1 -> teachers.set(student1.getGroup().getSubjects().stream()
+        student.ifPresent(student1 -> teachers.set(getStudentSubjects(student1).stream()
                 .map(Subject::getTutor)
                 .filter(Objects::nonNull)
                 .map(Tutor::getFullName)
                 .collect(Collectors.toList())));
 
         return convertToJson(teachers.get());
+    }
+
+    @GetMapping("/student/getteachersavgage/{id}")
+    String getStudentTeachersAverageAge(@PathVariable @NotNull @DecimalMin("1") Long id) throws JsonProcessingException {
+        Optional<Student> student = studentsRepository.findById(id);
+
+        if (!student.isPresent())
+            return convertToJson("Invalid Id");
+
+        List<Integer> teachers = getStudentSubjects(student.get()).stream()
+                .map(Subject::getTutor)
+                .filter(Objects::nonNull)
+                .map(Tutor::getAge)
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList());
+
+        return convertToJson(countAverageAge(teachers));
+    }
+
+    private List<Subject> getStudentSubjects(Student student2) {
+        try {
+            return student2.getGroup().getSubjects();
+        } catch (NullPointerException e) {
+            return new ArrayList<>();
+        }
+    }
+
+    private double countAverageAge(List<Integer> teacherAgeList) {
+        long sumOfAges = teacherAgeList.stream().mapToLong(teacherAge -> teacherAge).sum();
+        double result = sumOfAges / ((double) teacherAgeList.size());
+        return Double.isNaN(result) ? 0 : result;
     }
 
     private String convertToJson(Object all) throws JsonProcessingException {
