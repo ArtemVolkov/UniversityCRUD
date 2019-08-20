@@ -33,8 +33,8 @@ public class Subject {
     //many-to-many
     @ManyToMany
     @JoinTable(name = "subjects_groups",
-            joinColumns = {@JoinColumn(name = "group_id")},
-            inverseJoinColumns = {@JoinColumn(name = "subject_id")}
+            joinColumns = {@JoinColumn(name = "subject_id")},
+            inverseJoinColumns = {@JoinColumn(name = "group_id")}
     )
     @JsonIdentityInfo(generator= ObjectIdGenerators.IntSequenceGenerator.class, property="#group_id")
     private List<Group> groups;
