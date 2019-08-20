@@ -1,6 +1,8 @@
 package com.volkov.UniversityCRUD.model;
 
-import com.fasterxml.jackson.annotation.*;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -30,20 +32,20 @@ public class Student {
 
     @Column(name = "mark")
     @JsonProperty("Mark")
-    private String mark;
+    private Double mark;
 
     @Column(name = "age")
     @JsonProperty("Age")
-    private int age;
+    private Integer age;
 
     @Column(name = "sex")
     @JsonProperty("Sex")
     private String sex;
 
     //many-to-one
-    @ManyToOne(fetch = FetchType.EAGER,cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "group_id")
-    @JsonIdentityInfo(generator= ObjectIdGenerators.IntSequenceGenerator.class, property="#id")
+    @JsonIdentityInfo(generator = ObjectIdGenerators.IntSequenceGenerator.class, property = "#id")
     //@JsonIgnore
     private Group group;
 
