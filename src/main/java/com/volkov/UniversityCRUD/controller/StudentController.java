@@ -33,12 +33,12 @@ public class StudentController {
     }
 
     @GetMapping("/student/all")
-    String students() throws JsonProcessingException {
+    private String students() throws JsonProcessingException {
         return convertToJson(studentsRepository.findAll());
     }
 
     @GetMapping("/student/remove/{id}")
-    String removeStudentById(@PathVariable @NotNull @DecimalMin("1") Long id) throws JsonProcessingException {
+    private String removeStudentById(@PathVariable @NotNull @DecimalMin("1") Long id) throws JsonProcessingException {
         Optional<Student> student = studentsRepository.findById(id);
 
         if (!student.isPresent())
@@ -49,7 +49,7 @@ public class StudentController {
     }
 
     @GetMapping("/student/getsubjectcount/{id}")
-    String getStudentSubjectsCount(@PathVariable @NotNull @DecimalMin("1") Long id) throws JsonProcessingException {
+    private String getStudentSubjectsCount(@PathVariable @NotNull @DecimalMin("1") Long id) throws JsonProcessingException {
         Optional<Student> student = studentsRepository.findById(id);
 
         if (!student.isPresent())
@@ -61,7 +61,7 @@ public class StudentController {
     }
 
     @GetMapping("/student/getteachersname/{id}")
-    String getStudentTeachersName(@PathVariable @NotNull @DecimalMin("1") Long id) throws JsonProcessingException {
+    private String getStudentTeachersName(@PathVariable @NotNull @DecimalMin("1") Long id) throws JsonProcessingException {
         Optional<Student> student = studentsRepository.findById(id);
 
         if (!student.isPresent())
@@ -78,7 +78,7 @@ public class StudentController {
     }
 
     @GetMapping("/student/getteachersavgage/{id}")
-    String getStudentTeachersAverageAge(@PathVariable @NotNull @DecimalMin("1") Long id) throws JsonProcessingException {
+    private String getStudentTeachersAverageAge(@PathVariable @NotNull @DecimalMin("1") Long id) throws JsonProcessingException {
         Optional<Student> student = studentsRepository.findById(id);
 
         if (!student.isPresent())
