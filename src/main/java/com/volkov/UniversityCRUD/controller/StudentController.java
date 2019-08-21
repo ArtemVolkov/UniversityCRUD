@@ -1,12 +1,10 @@
 package com.volkov.UniversityCRUD.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.volkov.UniversityCRUD.model.Student;
 import com.volkov.UniversityCRUD.model.Subject;
 import com.volkov.UniversityCRUD.model.Tutor;
 import com.volkov.UniversityCRUD.repository.StudentRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
@@ -17,28 +15,33 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
+
+import static com.volkov.UniversityCRUD.Util.JsonConverter.convertToJson;
 
 @RestController
 public class StudentController {
 
-    @Autowired
-    private StudentRepository studentsRepository;
+    private final StudentRepository studentsRepository;
+
+    public StudentController(StudentRepository studentsRepository) {
+        this.studentsRepository = studentsRepository;
+    }
 
     @GetMapping("/student/all")
     String students() throws JsonProcessingException {
-        List<Student> all = studentsRepository.findAll();
-        return convertToJson(all);
+        return convertToJson(studentsRepository.findAll());
     }
 
     @GetMapping("/student/remove/{id}")
     String removeStudentById(@PathVariable @NotNull @DecimalMin("1") Long id) throws JsonProcessingException {
         Optional<Student> student = studentsRepository.findById(id);
-        if (student.isPresent())
-            studentsRepository.deleteById(id);
 
+        if (!student.isPresent())
+            return convertToJson("Invalid Id");
+
+        studentsRepository.deleteById(id);
         return convertToJson(student.orElse(new Student()));
     }
 
@@ -46,8 +49,10 @@ public class StudentController {
     String getStudentSubjectsCount(@PathVariable @NotNull @DecimalMin("1") Long id) throws JsonProcessingException {
         Optional<Student> student = studentsRepository.findById(id);
 
-        AtomicInteger studentSubjectsCount = new AtomicInteger();
-        student.ifPresent(student1 -> studentSubjectsCount.set(getStudentSubjects(student1).size()));
+        if (!student.isPresent())
+            return convertToJson("Invalid Id");
+
+        int studentSubjectsCount = getStudentSubjects(student.get()).size();
 
         return convertToJson(studentSubjectsCount);
     }
@@ -57,7 +62,7 @@ public class StudentController {
         Optional<Student> student = studentsRepository.findById(id);
 
         if (!student.isPresent())
-            return convertToJson(new ArrayList<String>());
+            return convertToJson("Invalid Id");
 
         AtomicReference<List<String>> teachers = new AtomicReference<>();
         student.ifPresent(student1 -> teachers.set(getStudentSubjects(student1).stream()
@@ -98,10 +103,5 @@ public class StudentController {
         long sumOfAges = teacherAgeList.stream().mapToLong(teacherAge -> teacherAge).sum();
         double result = sumOfAges / ((double) teacherAgeList.size());
         return Double.isNaN(result) ? 0 : result;
-    }
-
-    private String convertToJson(Object all) throws JsonProcessingException {
-        ObjectMapper objectMapper = new ObjectMapper();
-        return objectMapper.writeValueAsString(all);
     }
 }
