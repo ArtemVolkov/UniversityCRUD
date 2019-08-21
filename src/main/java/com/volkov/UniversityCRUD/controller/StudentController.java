@@ -26,6 +26,9 @@ import static com.volkov.UniversityCRUD.Util.JsonConverter.convertToJson;
 public class StudentController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(StudentController.class);
+
+    //TODO implement service layer - all business logic should be there
+    //TODO remove repository from controller
     private final StudentRepository studentsRepository;
 
     public StudentController(StudentRepository studentsRepository) {
@@ -33,14 +36,19 @@ public class StudentController {
     }
 
     @GetMapping("/student/all")
+        //TODO why all methods package visible
     String students() throws JsonProcessingException {
+        //TODO example: return studentService.findAllStudents();
         return convertToJson(studentsRepository.findAll());
     }
 
     @GetMapping("/student/remove/{id}")
+        //TODO why GET for delete operation?
     String removeStudentById(@PathVariable @NotNull @DecimalMin("1") Long id) throws JsonProcessingException {
         Optional<Student> student = studentsRepository.findById(id);
+        //TODO spring boot doesnt requires manual json converting. use dto objects for all responses
 
+        //TODO checking id is redundant operation, you should explain me later why deleteById doesnt require id checking
         if (!student.isPresent())
             return convertToJson("Invalid Id");
 
@@ -48,6 +56,7 @@ public class StudentController {
         return convertToJson(student.orElse(new Student()));
     }
 
+    //TODO usually path looks like: /student/{strudentId}/subject/count
     @GetMapping("/student/getsubjectcount/{id}")
     String getStudentSubjectsCount(@PathVariable @NotNull @DecimalMin("1") Long id) throws JsonProcessingException {
         Optional<Student> student = studentsRepository.findById(id);
@@ -55,11 +64,14 @@ public class StudentController {
         if (!student.isPresent())
             return convertToJson("Invalid Id");
 
+        //TODO explain me later how many times u have hit db to count items, u should clear understand how hibernate works
+        //TODO one item expects = one query returns only one item not whole entity
         int studentSubjectsCount = getStudentSubjects(student.get()).size();
 
         return convertToJson(studentSubjectsCount);
     }
 
+    //TODO /student/{studentId}/teacher/names or smthg similar
     @GetMapping("/student/getteachersname/{id}")
     String getStudentTeachersName(@PathVariable @NotNull @DecimalMin("1") Long id) throws JsonProcessingException {
         Optional<Student> student = studentsRepository.findById(id);
@@ -67,6 +79,8 @@ public class StudentController {
         if (!student.isPresent())
             return convertToJson("Invalid Id");
 
+        //TODO why u choose AtomicReference ? what goals have u reached?
+        //TODO u should replace such operations by one proper query
         AtomicReference<List<String>> teachers = new AtomicReference<>();
         student.ifPresent(student1 -> teachers.set(getStudentSubjects(student1).stream()
                 .map(Subject::getTutor)

@@ -20,6 +20,7 @@ public class Student {
     @Id
     @GeneratedValue
     @Column(name = "student_id")
+    //TODO do not use entity object as dto, in most cases contollers doesn't require to return whole information about entity with some sensitive data
     @JsonProperty("Student id")
     private long id;
 
