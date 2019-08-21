@@ -35,12 +35,12 @@ public class TutorController {
     }
 
     @GetMapping("/tutor/all")
-    private String getAllTutors() throws JsonProcessingException {
+    public String getAllTutors() throws JsonProcessingException {
         return convertToJson(tutorRepository.findAll());
     }
 
     @GetMapping("/tutor/{id}/remove")
-    private String removeTutorById(@PathVariable @NotNull @DecimalMin("1") Long id) throws JsonProcessingException {
+    public String removeTutorById(@PathVariable @NotNull @DecimalMin("1") Long id) throws JsonProcessingException {
         Optional<Tutor> tutorOptional = tutorRepository.findById(id);
 
         if (!tutorOptional.isPresent())
@@ -51,7 +51,7 @@ public class TutorController {
     }
 
     @GetMapping("/tutor/{id}/students/males")
-    private String getTutorMaleStudents(@PathVariable @NotNull @DecimalMin("1") Long id) throws JsonProcessingException {
+    public String getTutorMaleStudents(@PathVariable @NotNull @DecimalMin("1") Long id) throws JsonProcessingException {
         Optional<Tutor> tutorOptional = tutorRepository.findById(id);
 
         if (!tutorOptional.isPresent())

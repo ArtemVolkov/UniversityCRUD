@@ -33,12 +33,12 @@ public class StudentController {
     }
 
     @GetMapping("/student/all")
-    private String students() throws JsonProcessingException {
+    public String students() throws JsonProcessingException {
         return convertToJson(studentsRepository.findAll());
     }
 
     @GetMapping("/student/{id}/remove")
-    private String removeStudentById(@PathVariable @NotNull @DecimalMin("1") Long id) throws JsonProcessingException {
+    public String removeStudentById(@PathVariable @NotNull @DecimalMin("1") Long id) throws JsonProcessingException {
         Optional<Student> student = studentsRepository.findById(id);
 
         if (!student.isPresent())
@@ -49,7 +49,7 @@ public class StudentController {
     }
 
     @GetMapping("/student/{id}/subject/count")
-    private String getStudentSubjectsCount(@PathVariable @NotNull @DecimalMin("1") Long id) throws JsonProcessingException {
+    public String getStudentSubjectsCount(@PathVariable @NotNull @DecimalMin("1") Long id) throws JsonProcessingException {
         Optional<Student> student = studentsRepository.findById(id);
 
         if (!student.isPresent())
@@ -61,7 +61,7 @@ public class StudentController {
     }
 
     @GetMapping("/student/{id}/teacher/names")
-    private String getStudentTeachersName(@PathVariable @NotNull @DecimalMin("1") Long id) throws JsonProcessingException {
+    public String getStudentTeachersName(@PathVariable @NotNull @DecimalMin("1") Long id) throws JsonProcessingException {
         Optional<Student> student = studentsRepository.findById(id);
 
         if (!student.isPresent())
@@ -78,7 +78,7 @@ public class StudentController {
     }
 
     @GetMapping("/student/{id}/teacher/avgage")
-    private String getStudentTeachersAverageAge(@PathVariable @NotNull @DecimalMin("1") Long id) throws JsonProcessingException {
+    public String getStudentTeachersAverageAge(@PathVariable @NotNull @DecimalMin("1") Long id) throws JsonProcessingException {
         Optional<Student> student = studentsRepository.findById(id);
 
         if (!student.isPresent())
