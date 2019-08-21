@@ -5,6 +5,8 @@ import com.volkov.UniversityCRUD.model.Student;
 import com.volkov.UniversityCRUD.model.Subject;
 import com.volkov.UniversityCRUD.model.Tutor;
 import com.volkov.UniversityCRUD.repository.StudentRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
@@ -23,6 +25,7 @@ import static com.volkov.UniversityCRUD.Util.JsonConverter.convertToJson;
 @RestController
 public class StudentController {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(StudentController.class);
     private final StudentRepository studentsRepository;
 
     public StudentController(StudentRepository studentsRepository) {
@@ -91,10 +94,11 @@ public class StudentController {
         return convertToJson(countAverageAge(teachers));
     }
 
-    private List<Subject> getStudentSubjects(Student student2) {
+    private List<Subject> getStudentSubjects(Student student) {
         try {
-            return student2.getGroup().getSubjects();
+            return student.getGroup().getSubjects();
         } catch (NullPointerException e) {
+            LOGGER.error("Null pointer Exception in getTeacherGroup method! Tutor id=" + student.getId());
             return new ArrayList<>();
         }
     }

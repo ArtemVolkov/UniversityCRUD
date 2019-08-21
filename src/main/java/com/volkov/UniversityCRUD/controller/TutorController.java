@@ -6,6 +6,8 @@ import com.volkov.UniversityCRUD.model.Student;
 import com.volkov.UniversityCRUD.model.Tutor;
 import com.volkov.UniversityCRUD.repository.TutorRepository;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
@@ -23,9 +25,12 @@ import static com.volkov.UniversityCRUD.Util.JsonConverter.convertToJson;
 @RestController
 public class TutorController {
 
+    private final Logger LOGGER = LoggerFactory.getLogger(TutorController.class);
+
     private final TutorRepository tutorRepository;
 
     public TutorController(TutorRepository tutorRepository) {
+
         this.tutorRepository = tutorRepository;
     }
 
@@ -67,6 +72,7 @@ public class TutorController {
         try {
             return tutor.getSubject().getGroups();
         } catch (NullPointerException e) {
+            LOGGER.error("Null pointer Exception in getTeacherGroup method! Tutor id=" + tutor.getId());
             return new ArrayList<>();
         }
     }
