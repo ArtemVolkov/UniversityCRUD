@@ -37,7 +37,7 @@ public class StudentController {
         return convertToJson(studentsRepository.findAll());
     }
 
-    @GetMapping("/student/remove/{id}")
+    @GetMapping("/student/{id}/remove")
     private String removeStudentById(@PathVariable @NotNull @DecimalMin("1") Long id) throws JsonProcessingException {
         Optional<Student> student = studentsRepository.findById(id);
 
@@ -48,7 +48,7 @@ public class StudentController {
         return convertToJson(student.orElse(new Student()));
     }
 
-    @GetMapping("/student/getsubjectcount/{id}")
+    @GetMapping("/student/{id}/subject/count")
     private String getStudentSubjectsCount(@PathVariable @NotNull @DecimalMin("1") Long id) throws JsonProcessingException {
         Optional<Student> student = studentsRepository.findById(id);
 
@@ -60,7 +60,7 @@ public class StudentController {
         return convertToJson(studentSubjectsCount);
     }
 
-    @GetMapping("/student/getteachersname/{id}")
+    @GetMapping("/student/{id}/teacher/names")
     private String getStudentTeachersName(@PathVariable @NotNull @DecimalMin("1") Long id) throws JsonProcessingException {
         Optional<Student> student = studentsRepository.findById(id);
 
@@ -77,7 +77,7 @@ public class StudentController {
         return convertToJson(teachers.get());
     }
 
-    @GetMapping("/student/getteachersavgage/{id}")
+    @GetMapping("/student/{id}/teacher/avgage")
     private String getStudentTeachersAverageAge(@PathVariable @NotNull @DecimalMin("1") Long id) throws JsonProcessingException {
         Optional<Student> student = studentsRepository.findById(id);
 
