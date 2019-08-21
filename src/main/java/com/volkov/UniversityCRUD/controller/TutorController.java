@@ -29,6 +29,22 @@ public class TutorController {
         this.tutorRepository = tutorRepository;
     }
 
+    @GetMapping("/tutor/all")
+    String getAllTutors() throws JsonProcessingException {
+        return convertToJson(tutorRepository.findAll());
+    }
+
+    @GetMapping("/tutor/remove/{id}")
+    String removeTutorById(@PathVariable @NotNull @DecimalMin("1") Long id) throws JsonProcessingException {
+        Optional<Tutor> tutorOptional = tutorRepository.findById(id);
+
+        if (!tutorOptional.isPresent())
+            return convertToJson("Invalid tutor id");
+
+        tutorRepository.delete(tutorOptional.get());
+        return convertToJson(tutorOptional.get());
+    }
+
     @GetMapping("/tutor/getstudentsbysex/{id}")
     String getTutorMaleStudents(@PathVariable @NotNull @DecimalMin("1") Long id) throws JsonProcessingException {
         Optional<Tutor> tutorOptional = tutorRepository.findById(id);
@@ -53,6 +69,5 @@ public class TutorController {
         } catch (NullPointerException e) {
             return new ArrayList<>();
         }
-
     }
 }
