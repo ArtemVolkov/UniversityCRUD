@@ -10,6 +10,4 @@ public interface StudentRepositoryCustomInterface {
     long getStudentSubjectCount(Long id);
 
     List<String> getStudentTeacherNameList(Long id);
-
-    double getStudentTeachersAverageAge(Long id);
 }

@@ -11,7 +11,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import java.util.List;
-import java.util.Optional;
 
 @Repository
 @Transactional
@@ -49,20 +48,5 @@ public class StudentRepositoryImpl implements StudentRepositoryCustomInterface {
         return ((List<String>) jpaQuery.fetch());
     }
 
-    @Override
-    public double getStudentTeachersAverageAge(Long id) {
-        JPAQuery jpaQuery = new JPAQuery(entityManager);
-        QTutor tutor = QTutor.tutor;
-        jpaQuery
-                .select(tutor.age.avg())
-                .from(tutor)
-                .innerJoin(tutor.subject, QSubject.subject)
-                .innerJoin(QSubject.subject.groups, QGroup.group)
-                .innerJoin(QGroup.group.students, QStudent.student)
-                .where(QStudent.student.id.eq(id));
-
-        Object o = jpaQuery.fetchFirst();
-        return Optional.ofNullable((Double) o).orElse(0d);
-    }
 
 }
