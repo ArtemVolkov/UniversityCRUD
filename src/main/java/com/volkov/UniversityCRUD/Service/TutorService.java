@@ -1,9 +1,12 @@
 package com.volkov.UniversityCRUD.Service;
 
+import com.volkov.UniversityCRUD.Util.DTOConverter;
 import com.volkov.UniversityCRUD.model.Group;
 import com.volkov.UniversityCRUD.model.Student;
 import com.volkov.UniversityCRUD.model.Subject;
 import com.volkov.UniversityCRUD.model.Tutor;
+import com.volkov.UniversityCRUD.model.dto.StudentUpdateDTO;
+import com.volkov.UniversityCRUD.model.dto.TutorDTO;
 import com.volkov.UniversityCRUD.repository.TutorRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,12 +35,15 @@ public class TutorService {
         this.entityManager = entityManager;
     }
 
-    public List<Tutor> findAllTeachers() {
-        return tutorRepository.findAll();
+    public List<TutorDTO> findAllTeachers() {
+        return tutorRepository.findAll().stream()
+                .map(DTOConverter::convertTutorToDTO)
+                .collect(Collectors.toList());
     }
 
-    public Optional<Tutor> findTutorById(Long id) {
-        return tutorRepository.findById(id);
+    public Optional<TutorDTO> findTutorById(Long id) {
+        Optional<Tutor> tutor = tutorRepository.findById(id);
+        return Optional.ofNullable(DTOConverter.convertTutorToDTO(tutor.orElse(new Tutor())));
     }
 
     public void deleteTeacherById(Long id) {
@@ -48,11 +54,13 @@ public class TutorService {
         }
     }
 
-    public List<Student> findTeacherMaleStudent(Long id) {
-        return tutorRepository.findTutorStudentsBySex(id, "Male");
+    public List<StudentUpdateDTO> findTeacherMaleStudent(Long id) {
+        return tutorRepository.findTutorStudentsBySex(id, "Male").stream()
+                .map(DTOConverter::convertStudentToDTO)
+                .collect(Collectors.toList());
     }
 
-    public List<Student> findTeacherMaleStudent2(Long id) {
+    public List<StudentUpdateDTO> findTeacherMaleStudent2(Long id) {
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<Object> query = criteriaBuilder.createQuery();
         Root<Student> from = query.from(Student.class);
@@ -69,6 +77,7 @@ public class TutorService {
         List<Object> resultList = entityManager.createQuery(query).getResultList();
         return resultList.stream()
                 .map(o -> (Student) o)
+                .map(DTOConverter::convertStudentToDTO)
                 .collect(Collectors.toList());
 
     }
