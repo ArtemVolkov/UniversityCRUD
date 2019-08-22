@@ -26,7 +26,7 @@ public class Group {
     private String groupCode;
 
     //one-to-many
-    @OneToMany(mappedBy = "group")
+    @OneToMany(mappedBy = "group",cascade = CascadeType.ALL)
     private List<Student> students;
 
     //many-to-many
