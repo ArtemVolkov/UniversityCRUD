@@ -5,6 +5,9 @@ import com.volkov.UniversityCRUD.Util.DTOConverter;
 import com.volkov.UniversityCRUD.model.*;
 import com.volkov.UniversityCRUD.model.dto.StudentUpdateDTO;
 import com.volkov.UniversityCRUD.repository.StudentRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManager;
@@ -14,6 +17,8 @@ import java.util.stream.Collectors;
 
 @Service
 public class StudentService {
+
+    private Logger Logger = LoggerFactory.getLogger(StudentService.class);
 
     private final EntityManager entityManager;
     private final StudentRepository studentRepository;
@@ -36,7 +41,12 @@ public class StudentService {
     }
 
     public void deleteStudentById(Long id) {
-        studentRepository.deleteById(id);
+        try {
+            studentRepository.deleteById(id);
+        } catch (EmptyResultDataAccessException e) {
+            Logger.error("Error in deleteTeacherById method! Id= " + id);
+        }
+
     }
 
     public long getStudentSubjectCount(Long id) {
