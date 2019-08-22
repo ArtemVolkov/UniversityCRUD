@@ -1,10 +1,7 @@
 package com.volkov.UniversityCRUD.Service;
 
 import com.volkov.UniversityCRUD.Util.DTOConverter;
-import com.volkov.UniversityCRUD.model.Group;
-import com.volkov.UniversityCRUD.model.Student;
-import com.volkov.UniversityCRUD.model.Subject;
-import com.volkov.UniversityCRUD.model.Tutor;
+import com.volkov.UniversityCRUD.model.*;
 import com.volkov.UniversityCRUD.model.dto.StudentUpdateDTO;
 import com.volkov.UniversityCRUD.model.dto.TutorDTO;
 import com.volkov.UniversityCRUD.repository.TutorRepository;
@@ -25,7 +22,7 @@ import java.util.stream.Collectors;
 @Service
 public class TutorService {
 
-    private Logger Logger = LoggerFactory.getLogger(TutorService.class);
+    private Logger logger = LoggerFactory.getLogger(TutorService.class);
 
     private final EntityManager entityManager;
     private final TutorRepository tutorRepository;
@@ -46,11 +43,20 @@ public class TutorService {
         return Optional.ofNullable(DTOConverter.convertTutorToDTO(tutor.orElse(new Tutor())));
     }
 
-    public void deleteTeacherById(Long id) {
+    public ReturnMessage deleteTeacherById(Long id) {
+        ReturnMessage.ReturnMessageBuilder builder = ReturnMessage.builder();
         try {
             tutorRepository.deleteById(id);
+            return builder
+                    .success(true)
+                    .message("Tutor with id " + id + " has been removed!")
+                    .build();
         } catch (EmptyResultDataAccessException e) {
-            Logger.error("Error in deleteTeacherById method! Id= " + id);
+            logger.error("Error in deleteTeacherById method! Id= " + id);
+            return builder
+                    .success(false)
+                    .message(e)
+                    .build();
         }
     }
 

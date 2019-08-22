@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.NotNull;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 public class TutorController {
@@ -29,13 +28,7 @@ public class TutorController {
 
     @GetMapping("/tutor/{id}/remove")
     public ReturnMessage removeTutorById(@PathVariable @NotNull @DecimalMin("1") Long id) {
-        Optional<TutorDTO> tutorOptional = tutorService.findTutorById(id);
-
-        if (!tutorOptional.isPresent())
-            return ReturnMessage.getInstanceOfFailMessage("Can`t find tutor with this ID!");
-
-        tutorService.deleteTeacherById(id);
-        return ReturnMessage.getInstanceOfSuccessMessage(tutorOptional.get());
+        return tutorService.deleteTeacherById(id);
     }
 
     @GetMapping("/tutor/{id}/students/males")

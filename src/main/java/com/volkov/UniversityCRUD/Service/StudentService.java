@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 @Service
 public class StudentService {
 
-    private Logger Logger = LoggerFactory.getLogger(StudentService.class);
+    private Logger logger = LoggerFactory.getLogger(StudentService.class);
 
     private final EntityManager entityManager;
     private final StudentRepository studentRepository;
@@ -40,11 +40,22 @@ public class StudentService {
         return Optional.of(DTOConverter.convertStudentToDTO(studentOptional.orElse(new Student())));
     }
 
-    public void deleteStudentById(Long id) {
+    public ReturnMessage deleteStudentById(Long id) {
+        ReturnMessage.ReturnMessageBuilder builder = ReturnMessage.builder();
         try {
+
             studentRepository.deleteById(id);
+            return builder
+                    .success(true)
+                    .message("Student with id " + id + " has been removed!")
+                    .build();
+
         } catch (EmptyResultDataAccessException e) {
-            Logger.error("Error in deleteTeacherById method! Id= " + id);
+            logger.error("Error in deleteTeacherById method! Id= " + id);
+            return builder.
+                    success(false)
+                    .message(e)
+                    .build();
         }
 
     }

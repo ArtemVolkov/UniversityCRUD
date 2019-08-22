@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.NotNull;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 public class StudentController {
@@ -28,29 +27,33 @@ public class StudentController {
 
     @GetMapping("/student/{id}/remove")
     public ReturnMessage removeStudentById(@PathVariable @NotNull @DecimalMin("1") Long id) {
-        Optional<StudentUpdateDTO> studentDTO = studentService.findById(id);
-
-        if (!studentDTO.isPresent())
-            return ReturnMessage.getInstanceOfFailMessage("Can`t find student with this ID!");
-
-        studentService.deleteStudentById(studentDTO.get().getId());
-        return ReturnMessage.getInstanceOfSuccessMessage(studentDTO.get());
+        return studentService.deleteStudentById(id);
     }
 
     @GetMapping("/student/{id}/subject/count")
     public ReturnMessage getStudentSubjectsCount(@PathVariable @NotNull @DecimalMin("1") Long id) {
-        return ReturnMessage.getInstanceOfSuccessMessage
-                ("Student with id " + id + " subjects count = " + studentService.getStudentSubjectCount(id));
+        return ReturnMessage
+                .builder()
+                .success(true)
+                .message("Student with id " + id + " subjects count = " + studentService.getStudentSubjectCount(id))
+                .build();
     }
 
     @GetMapping("/student/{id}/teacher/names")
     public ReturnMessage getStudentTeachersName(@PathVariable @NotNull @DecimalMin("1") Long id) {
-        return ReturnMessage.getInstanceOfSuccessMessage(studentService.getStudentTeacherNameList(id));
+        return ReturnMessage
+                .builder()
+                .success(true)
+                .message(studentService.getStudentTeacherNameList(id))
+                .build();
     }
 
     @GetMapping("/student/{id}/teacher/avgage")
     public ReturnMessage getStudentTeachersAverageAge(@PathVariable @NotNull @DecimalMin("1") Long id) {
-        return ReturnMessage.getInstanceOfSuccessMessage
-                ("Student with id " + id + " teachers average age = " + studentService.getStudentTeachersAverageAge(id));
+        return ReturnMessage
+                .builder()
+                .success(true)
+                .message("Student with id " + id + " teachers average age = " + studentService.getStudentTeachersAverageAge(id))
+                .build();
     }
 }
