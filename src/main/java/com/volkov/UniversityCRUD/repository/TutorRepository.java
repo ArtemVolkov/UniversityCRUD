@@ -2,13 +2,14 @@ package com.volkov.UniversityCRUD.repository;
 
 import com.volkov.UniversityCRUD.model.Student;
 import com.volkov.UniversityCRUD.model.Tutor;
+import com.volkov.UniversityCRUD.repository.interfaces.TutorRepositoryCustomInterface;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
-public interface TutorRepository extends JpaRepository<Tutor, Long> {
+public interface TutorRepository extends JpaRepository<Tutor, Long> , TutorRepositoryCustomInterface {
 
     @Query("Select stud FROM Tutor t " +
             "inner join t.subject subj " +
