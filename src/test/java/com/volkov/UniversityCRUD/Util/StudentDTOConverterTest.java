@@ -2,8 +2,12 @@ package com.volkov.UniversityCRUD.Util;
 
 import com.volkov.UniversityCRUD.model.Group;
 import com.volkov.UniversityCRUD.model.Student;
+import com.volkov.UniversityCRUD.model.Subject;
+import com.volkov.UniversityCRUD.model.Tutor;
 import com.volkov.UniversityCRUD.model.dto.GroupDTO;
 import com.volkov.UniversityCRUD.model.dto.StudentUpdateDTO;
+import com.volkov.UniversityCRUD.model.dto.SubjectDTO;
+import com.volkov.UniversityCRUD.model.dto.TutorDTO;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -17,7 +21,7 @@ public class StudentDTOConverterTest extends Assert {
     private GroupDTO expectedGroupDTO = new GroupDTO();
 
     @Before
-    public void creteNewStudent() {
+    public void initializeNewStudentAndGroup() {
         group = new Group();
         group.setId(5L);
         group.setGroupName("aaa");
@@ -45,12 +49,50 @@ public class StudentDTOConverterTest extends Assert {
     }
 
     @Test
-    public void testDTOConverting() {
+    public void testDTOStudentAndGroupConverting() {
         StudentUpdateDTO studentDTO = DTOConverter.convertStudentToDTO(student);
         GroupDTO groupDTO = DTOConverter.convertGroupToDTO(group);
 
-        assertEquals(expectedGroupDTO,groupDTO);
-        assertEquals(expectedStudentDTO,studentDTO);
+        assertEquals(expectedGroupDTO, groupDTO);
+        assertEquals(expectedStudentDTO, studentDTO);
+    }
+
+    private Tutor tutor;
+    private Subject subject;
+    private SubjectDTO expectedSubjectDTO = new SubjectDTO();
+    private TutorDTO expectedTutorDTO = new TutorDTO();
+
+    @Before
+    public void initializeNewTutorAndSubject() {
+        subject = new Subject();
+        subject.setId(5L);
+        subject.setSubjectTitle("Math");
+        subject.setSubjectCode("0525");
+
+        tutor = new Tutor();
+        tutor.setId(5L);
+        tutor.setFullName("A.Berdugin");
+        tutor.setAge(30);
+        tutor.setPhone("06578");
+        tutor.setSubject(subject);
+
+        expectedSubjectDTO.setSubjectTitle(subject.getSubjectTitle());
+        expectedSubjectDTO.setSubjectCode(subject.getSubjectCode());
+
+        expectedTutorDTO.setId(tutor.getId());
+        expectedTutorDTO.setFullName(tutor.getFullName());
+        expectedTutorDTO.setAge(tutor.getAge());
+        expectedTutorDTO.setPhone(tutor.getPhone());
+        expectedTutorDTO.setSubject(expectedSubjectDTO);
+    }
+
+
+    public void testDTOTutorAndSubjectConverting() {
+        TutorDTO tutorDTO = DTOConverter.convertTutorToDTO(tutor);
+        SubjectDTO subjectDTO = DTOConverter.convertSubjectToDTO(subject);
+
+        assertEquals(expectedSubjectDTO, subjectDTO);
+        assertEquals(expectedTutorDTO, tutorDTO);
     }
 
 }

@@ -1,7 +1,5 @@
 package com.volkov.UniversityCRUD.model;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -27,7 +25,6 @@ public class Subject {
 
     //one-to-one
     @OneToOne(mappedBy = "subject", cascade = CascadeType.REMOVE)
-    @JsonIdentityInfo(generator= ObjectIdGenerators.IntSequenceGenerator.class, property="#tutor_id")
     private Tutor tutor;
 
     //many-to-many
@@ -36,7 +33,6 @@ public class Subject {
             joinColumns = {@JoinColumn(name = "subject_id")},
             inverseJoinColumns = {@JoinColumn(name = "group_id")}
     )
-    @JsonIdentityInfo(generator= ObjectIdGenerators.IntSequenceGenerator.class, property="#group_id")
     private List<Group> groups;
 
 
