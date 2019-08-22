@@ -86,7 +86,7 @@ public class StudentDTOConverterTest extends Assert {
         expectedTutorDTO.setSubject(expectedSubjectDTO);
     }
 
-
+    @Test
     public void testDTOTutorAndSubjectConverting() {
         TutorDTO tutorDTO = DTOConverter.convertTutorToDTO(tutor);
         SubjectDTO subjectDTO = DTOConverter.convertSubjectToDTO(subject);
