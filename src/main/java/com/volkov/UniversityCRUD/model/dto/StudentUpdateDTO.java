@@ -1,6 +1,7 @@
 package com.volkov.UniversityCRUD.model.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -9,6 +10,7 @@ import javax.validation.constraints.NotNull;
 
 @Setter
 @Getter
+@EqualsAndHashCode
 public class StudentUpdateDTO {
 
         @Id
@@ -32,8 +34,8 @@ public class StudentUpdateDTO {
         @JsonProperty("Sex")
         private String sex;
 
-
-        //private Group group;
+        @JsonProperty("Group")
+        private GroupDTO group;
 }
 
 
