@@ -1,8 +1,8 @@
 package com.volkov.UniversityCRUD.Service;
 
-import com.querydsl.jpa.impl.JPAQuery;
 import com.volkov.UniversityCRUD.Util.DTOConverter;
-import com.volkov.UniversityCRUD.model.*;
+import com.volkov.UniversityCRUD.model.ReturnMessage;
+import com.volkov.UniversityCRUD.model.Student;
 import com.volkov.UniversityCRUD.model.dto.StudentUpdateDTO;
 import com.volkov.UniversityCRUD.repository.StudentRepository;
 import org.slf4j.Logger;
@@ -10,7 +10,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.EntityManager;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -20,12 +19,10 @@ public class StudentService {
 
     private Logger logger = LoggerFactory.getLogger(StudentService.class);
 
-    private final EntityManager entityManager;
     private final StudentRepository studentRepository;
 
-    public StudentService(StudentRepository studentRepository, EntityManager entityManager) {
+    public StudentService(StudentRepository studentRepository) {
         this.studentRepository = studentRepository;
-        this.entityManager = entityManager;
     }
 
     public List<StudentUpdateDTO> findAllStudent() {
@@ -61,44 +58,14 @@ public class StudentService {
     }
 
     public long getStudentSubjectCount(Long id) {
-        JPAQuery jpaQuery = new JPAQuery(entityManager);
-        QSubject subject = QSubject.subject;
-        jpaQuery.from(subject)
-                .innerJoin(subject.groups, QGroup.group)
-                .innerJoin(QGroup.group.students, QStudent.student)
-                .where(QStudent.student.id.eq(id));
-
-        return jpaQuery.fetchCount();
-
+        return studentRepository.getStudentSubjectCount(id);
     }
 
     public List<String> getStudentTeacherNameList(Long id) {
-        JPAQuery jpaQuery = new JPAQuery<>(entityManager);
-        QTutor tutor = QTutor.tutor;
-        jpaQuery.select(tutor.fullName).from(tutor)
-                .innerJoin(tutor.subject, QSubject.subject)
-                .innerJoin(QSubject.subject.groups, QGroup.group)
-                .innerJoin(QGroup.group.students, QStudent.student)
-                .where(QStudent.student.id.eq(id));
-
-        return ((List<String>) jpaQuery.fetch());
-
+        return studentRepository.getStudentTeacherNameList(id);
     }
 
     public double getStudentTeachersAverageAge(Long id) {
-        JPAQuery jpaQuery = new JPAQuery(entityManager);
-        QTutor tutor = QTutor.tutor;
-        jpaQuery
-                .select(tutor.age.avg())
-                .from(tutor)
-                .innerJoin(tutor.subject, QSubject.subject)
-                .innerJoin(QSubject.subject.groups, QGroup.group)
-                .innerJoin(QGroup.group.students, QStudent.student)
-                .where(QStudent.student.id.eq(id));
-
-        Object o = jpaQuery.fetchFirst();
-        return Optional.ofNullable((Double) o).orElse(0d);
-
-
+        return studentRepository.getStudentTeachersAverageAge(id);
     }
 }
