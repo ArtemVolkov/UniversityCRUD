@@ -1,6 +1,7 @@
 package com.volkov.UniversityCRUD.controller;
 
 import com.volkov.UniversityCRUD.Service.StudentService;
+import com.volkov.UniversityCRUD.model.ReturnMessage;
 import com.volkov.UniversityCRUD.model.Student;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -26,14 +27,14 @@ public class StudentController {
     }
 
     @GetMapping("/student/{id}/remove")
-    public Student removeStudentById(@PathVariable @NotNull @DecimalMin("1") Long id) {
+    public ReturnMessage removeStudentById(@PathVariable @NotNull @DecimalMin("1") Long id) {
         Optional<Student> student = studentService.findById(id);
 
         if (!student.isPresent())
-            return new Student();
+            return new ReturnMessage(false, "Can`t find student with this ID!");
 
         studentService.deleteStudent(student.get());
-        return student.orElse(new Student());
+        return new ReturnMessage(true, student.get());
     }
 
     @GetMapping("/student/{id}/subject/count")

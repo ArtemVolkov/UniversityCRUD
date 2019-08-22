@@ -1,7 +1,7 @@
 package com.volkov.UniversityCRUD.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.volkov.UniversityCRUD.Service.TutorService;
+import com.volkov.UniversityCRUD.model.ReturnMessage;
 import com.volkov.UniversityCRUD.model.Student;
 import com.volkov.UniversityCRUD.model.Tutor;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,14 +28,14 @@ public class TutorController {
     }
 
     @GetMapping("/tutor/{id}/remove")
-    public Tutor removeTutorById(@PathVariable @NotNull @DecimalMin("1") Long id) {
+    public ReturnMessage removeTutorById(@PathVariable @NotNull @DecimalMin("1") Long id) {
         Optional<Tutor> tutorOptional = tutorService.findTutorById(id);
 
         if (!tutorOptional.isPresent())
-            return new Tutor();
+            return new ReturnMessage(false, "Can`t find tutor with this ID!");
 
         tutorService.deleteTeacherById(id);
-        return tutorOptional.get();
+        return new ReturnMessage(true, tutorOptional.get());
     }
 
     @GetMapping("/tutor/{id}/students/males")
