@@ -10,11 +10,19 @@ public class ReturnMessage {
     private String type;
     private Object message;
 
-    public ReturnMessage(boolean success, Object message) {
+    private ReturnMessage(boolean success, Object message) {
         type = "Fail";
         if (success)
             type = "Success";
         this.message = message;
+    }
+
+    public static ReturnMessage getInstanceOfSuccessMessage(Object object) {
+        return new ReturnMessage(true, object);
+    }
+
+    public static ReturnMessage getInstanceOfFailMessage(Object object) {
+        return new ReturnMessage(false, object);
     }
 
 }

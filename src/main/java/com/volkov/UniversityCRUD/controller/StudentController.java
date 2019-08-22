@@ -2,7 +2,7 @@ package com.volkov.UniversityCRUD.controller;
 
 import com.volkov.UniversityCRUD.Service.StudentService;
 import com.volkov.UniversityCRUD.model.ReturnMessage;
-import com.volkov.UniversityCRUD.model.Student;
+import com.volkov.UniversityCRUD.model.dto.StudentUpdateDTO;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
@@ -22,33 +22,35 @@ public class StudentController {
     }
 
     @GetMapping("/student/all")
-    public List<Student> students() {
+    public List<StudentUpdateDTO> students() {
         return studentService.findAllStudent();
     }
 
     @GetMapping("/student/{id}/remove")
     public ReturnMessage removeStudentById(@PathVariable @NotNull @DecimalMin("1") Long id) {
-        Optional<Student> student = studentService.findById(id);
+        Optional<StudentUpdateDTO> studentDTO = studentService.findById(id);
 
-        if (!student.isPresent())
-            return new ReturnMessage(false, "Can`t find student with this ID!");
+        if (!studentDTO.isPresent())
+            return ReturnMessage.getInstanceOfFailMessage("Can`t find student with this ID!");
 
-        studentService.deleteStudent(student.get());
-        return new ReturnMessage(true, student.get());
+        studentService.deleteStudentById(studentDTO.get().getId());
+        return ReturnMessage.getInstanceOfSuccessMessage(studentDTO.get());
     }
 
     @GetMapping("/student/{id}/subject/count")
-    public long getStudentSubjectsCount(@PathVariable @NotNull @DecimalMin("1") Long id) {
-        return studentService.getStudentSubjectCount(id);
+    public ReturnMessage getStudentSubjectsCount(@PathVariable @NotNull @DecimalMin("1") Long id) {
+        return ReturnMessage.getInstanceOfSuccessMessage
+                ("Student with id " + id + " subjects count = " + studentService.getStudentSubjectCount(id));
     }
 
     @GetMapping("/student/{id}/teacher/names")
-    public List<String> getStudentTeachersName(@PathVariable @NotNull @DecimalMin("1") Long id) {
-        return studentService.getStudentTeacherNameList(id);
+    public ReturnMessage getStudentTeachersName(@PathVariable @NotNull @DecimalMin("1") Long id) {
+        return ReturnMessage.getInstanceOfSuccessMessage(studentService.getStudentTeacherNameList(id));
     }
 
     @GetMapping("/student/{id}/teacher/avgage")
-    public double getStudentTeachersAverageAge(@PathVariable @NotNull @DecimalMin("1") Long id) {
-        return studentService.getStudentTeachersAverageAge(id);
+    public ReturnMessage getStudentTeachersAverageAge(@PathVariable @NotNull @DecimalMin("1") Long id) {
+        return ReturnMessage.getInstanceOfSuccessMessage
+                ("Student with id " + id + " teachers average age = " + studentService.getStudentTeachersAverageAge(id));
     }
 }

@@ -1,13 +1,16 @@
 package com.volkov.UniversityCRUD.Service;
 
 import com.querydsl.jpa.impl.JPAQuery;
+import com.volkov.UniversityCRUD.Util.DTOConverter;
 import com.volkov.UniversityCRUD.model.*;
+import com.volkov.UniversityCRUD.model.dto.StudentUpdateDTO;
 import com.volkov.UniversityCRUD.repository.StudentRepository;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManager;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class StudentService {
@@ -20,16 +23,20 @@ public class StudentService {
         this.entityManager = entityManager;
     }
 
-    public List<Student> findAllStudent() {
-        return studentRepository.findAll();
+    public List<StudentUpdateDTO> findAllStudent() {
+        return studentRepository.findAll()
+                .stream()
+                .map(DTOConverter::convertStudentToDTO)
+                .collect(Collectors.toList());
     }
 
-    public Optional<Student> findById(Long id) {
-        return studentRepository.findById(id);
+    public Optional<StudentUpdateDTO> findById(Long id) {
+        Optional<Student> studentOptional = studentRepository.findById(id);
+        return Optional.of(DTOConverter.convertStudentToDTO(studentOptional.orElse(new Student())));
     }
 
-    public void deleteStudent(Student student) {
-        studentRepository.delete(student);
+    public void deleteStudentById(Long id) {
+        studentRepository.deleteById(id);
     }
 
     public long getStudentSubjectCount(Long id) {
