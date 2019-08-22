@@ -32,10 +32,10 @@ public class TutorController {
         Optional<Tutor> tutorOptional = tutorService.findTutorById(id);
 
         if (!tutorOptional.isPresent())
-            return new ReturnMessage(false, "Can`t find tutor with this ID!");
+            return ReturnMessage.getInstanceOfFailMessage("Can`t find tutor with this ID!");
 
         tutorService.deleteTeacherById(id);
-        return new ReturnMessage(true, tutorOptional.get());
+        return ReturnMessage.getInstanceOfSuccessMessage(tutorOptional.get());
     }
 
     @GetMapping("/tutor/{id}/students/males")
