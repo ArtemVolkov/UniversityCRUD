@@ -17,7 +17,7 @@ public class Subject {
     @Id
     @GeneratedValue
     @Column(name = "subject_id")
-    private long id;
+    private Long id;
     @Column(name = "subject_title")
     private String subjectTitle;
     @Column(name = "subject_code")

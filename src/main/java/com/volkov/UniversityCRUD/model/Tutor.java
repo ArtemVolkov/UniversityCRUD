@@ -18,7 +18,7 @@ public class Tutor {
     @GeneratedValue
     @Column(name = "tut_id")
     @JsonProperty("Tutor id")
-    private long id;
+    private Long id;
     @Column(name = "full_name")
     @JsonProperty("Full name")
     private String fullName;

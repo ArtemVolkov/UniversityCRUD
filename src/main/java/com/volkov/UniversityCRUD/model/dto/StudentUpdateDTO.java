@@ -16,7 +16,7 @@ public class StudentUpdateDTO {
         @Id
         @NotNull
         @JsonProperty("Student id")
-        private long id;
+        private Long id;
 
         @NotNull
         @JsonProperty("Full Name")

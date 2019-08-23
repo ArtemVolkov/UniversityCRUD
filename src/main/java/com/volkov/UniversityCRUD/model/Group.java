@@ -1,6 +1,7 @@
 package com.volkov.UniversityCRUD.model;
 
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -13,12 +14,13 @@ import java.util.List;
 @Entity
 @ToString
 @Table(name = "groups")
+@EqualsAndHashCode
 public class Group {
 
     @Id
     @GeneratedValue
     @Column(name = "group_id")
-    private long id;
+    private Long id;
 
     @Column(name = "group_name")
     private String groupName;

@@ -11,7 +11,7 @@ import lombok.Setter;
 public class TutorDTO {
 
     @JsonProperty("Teacher id")
-    private long id;
+    private Long id;
 
     @JsonProperty("Full Name")
     private String fullName;

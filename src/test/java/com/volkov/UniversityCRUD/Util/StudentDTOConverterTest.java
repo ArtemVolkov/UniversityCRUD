@@ -95,4 +95,69 @@ public class StudentDTOConverterTest extends Assert {
         assertEquals(expectedTutorDTO, tutorDTO);
     }
 
+    private Student studentForUpdate;
+    private Group groupForUpdate;
+    private Student expectedStudentForUpdate1;
+    private Group expectedGroupForUpdate1;
+    private StudentUpdateDTO studentUpdateDTO = new StudentUpdateDTO();
+    private GroupDTO groupUpdateDTO = new GroupDTO();
+
+    @Before
+    public void initializeObjectsForUpdateStudentTest() {
+        groupForUpdate = new Group();
+        groupForUpdate.setId(5L);
+        groupForUpdate.setGroupName("aaa");
+        groupForUpdate.setGroupCode("165");
+
+        studentForUpdate = new Student();
+        studentForUpdate.setGroup(groupForUpdate);
+        studentForUpdate.setId(5L);
+        studentForUpdate.setMark(5d);
+        studentForUpdate.setAge(5);
+        studentForUpdate.setPhone("555");
+        studentForUpdate.setFullName("Fullname");
+        studentForUpdate.setSex("Male");
+
+        expectedGroupForUpdate1 = new Group();
+        expectedGroupForUpdate1.setId(5L);
+        expectedGroupForUpdate1.setGroupName("bbb");
+        expectedGroupForUpdate1.setGroupCode("166");
+
+        expectedStudentForUpdate1 = new Student();
+        expectedStudentForUpdate1.setGroup(expectedGroupForUpdate1);
+        expectedStudentForUpdate1.setId(studentForUpdate.getId() + 1);
+        expectedStudentForUpdate1.setMark(studentForUpdate.getMark() + 1);
+        expectedStudentForUpdate1.setAge(studentForUpdate.getAge() + 1);
+        expectedStudentForUpdate1.setPhone(studentForUpdate.getPhone() + 111);
+        expectedStudentForUpdate1.setFullName(studentForUpdate.getFullName() + " name");
+        expectedStudentForUpdate1.setSex("Female");
+
+        groupUpdateDTO.setGroupCode("166");
+        groupUpdateDTO.setGroupName("bbb");
+
+        studentUpdateDTO.setGroup(groupUpdateDTO);
+        studentUpdateDTO.setId(studentForUpdate.getId() + 1);
+        studentUpdateDTO.setMark(studentForUpdate.getMark() + 1);
+        studentUpdateDTO.setAge(studentForUpdate.getAge() + 1);
+        studentUpdateDTO.setPhone(studentForUpdate.getPhone() + 111);
+        studentUpdateDTO.setFullName(studentForUpdate.getFullName() + " name");
+        studentUpdateDTO.setSex("Female");
+
+    }
+
+    @Test
+    public void testUpdateStudentByDTO() {
+        DTOConverter.updateStudentByDTO(studentUpdateDTO, studentForUpdate);
+        assertEquals(expectedStudentForUpdate1, studentForUpdate);
+
+        studentUpdateDTO.setMark(null); // if any field in DTO is null it shouldn`t be used to replace;
+        DTOConverter.updateStudentByDTO(studentUpdateDTO, studentForUpdate);
+        assertEquals(expectedStudentForUpdate1, studentForUpdate);
+
+        DTOConverter.updateGroupByDTO(groupUpdateDTO, groupForUpdate);
+        assertEquals(expectedGroupForUpdate1, groupForUpdate);
+
+
+    }
+
 }
