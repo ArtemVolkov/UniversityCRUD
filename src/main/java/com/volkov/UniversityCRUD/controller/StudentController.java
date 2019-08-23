@@ -2,10 +2,9 @@ package com.volkov.UniversityCRUD.controller;
 
 import com.volkov.UniversityCRUD.Service.StudentService;
 import com.volkov.UniversityCRUD.model.ReturnMessage;
+import com.volkov.UniversityCRUD.model.dto.GroupDTO;
 import com.volkov.UniversityCRUD.model.dto.StudentUpdateDTO;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.NotNull;
@@ -55,5 +54,29 @@ public class StudentController {
                 .success(true)
                 .message("Student with id " + id + " teachers average age = " + studentService.getStudentTeachersAverageAge(id))
                 .build();
+    }
+
+    @PostMapping("/student/{id}/update")
+    public ReturnMessage updateStudent(@PathVariable @NotNull @DecimalMin("1") Long id,
+                                       @RequestBody StudentUpdateDTO studentDTO) {
+        return studentService.updateStudent(id, studentDTO);
+    }
+
+    @PostMapping("/student/createDTO")
+    public StudentUpdateDTO createDTO() {
+        GroupDTO groupDTO = new GroupDTO();
+        groupDTO.setGroupCode("100");
+        groupDTO.setGroupName("Changed");
+
+        StudentUpdateDTO studentDTO = new StudentUpdateDTO();
+        studentDTO.setId(6L);
+        studentDTO.setGroup(groupDTO);
+        studentDTO.setFullName("Hi i`m changed");
+        studentDTO.setPhone("330");
+        studentDTO.setSex("Male");
+        studentDTO.setMark(3.3D);
+        studentDTO.setAge(10);
+
+        return studentDTO;
     }
 }

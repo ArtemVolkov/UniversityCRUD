@@ -31,17 +31,64 @@ public class DTOConverter {
     }
 
     public static Student updateStudentByDTO(StudentUpdateDTO studentDTO, Student student) {
-        validateNullStudDTO(studentDTO, student);
+        validateEmptyStudentDTOValues(student, studentDTO);
         modelMapper.map(studentDTO, student);
         return student;
     }
 
     public static Group updateGroupByDTO(GroupDTO groupDTO, Group group) {
-        validateNullGroupDTO(groupDTO, group);
+        validateEmptyGroupDTOValues(groupDTO, group);
         modelMapper.map(groupDTO, group);
         return group;
     }
 
+    /**
+     * Checks every field in studentDTO if this field is empty but not null,
+     * it`ll set to null and set to null in student field;
+     */
+    private static void validateEmptyStudentDTOValues(Student student, StudentUpdateDTO studentUpdateDTO) {
+        if (studentUpdateDTO.getFullName() != null && studentUpdateDTO.getFullName().isEmpty()) {
+            student.setFullName(null);
+            studentUpdateDTO.setFullName(null);
+        }
+        if (studentUpdateDTO.getSex() != null && studentUpdateDTO.getSex().isEmpty()) {
+            student.setSex(null);
+            studentUpdateDTO.setSex(null);
+        }
+        if (studentUpdateDTO.getPhone() != null && studentUpdateDTO.getPhone().isEmpty()) {
+            student.setPhone(null);
+            studentUpdateDTO.setPhone(null);
+        }
+        if (studentUpdateDTO.getGroup() != null) {
+            if (student.getGroup() == null) {
+                student.setGroup(modelMapper.map(studentUpdateDTO.getGroup(), Group.class));
+            }
+            GroupDTO groupDTO = studentUpdateDTO.getGroup();
+            validateEmptyGroupDTOValues(groupDTO, student.getGroup());
+        }
+        validateNullStudDTO(studentUpdateDTO, student);
+    }
+
+    /**
+     * Checks every field in GroupDTO if this field is empty but not null,
+     * it`ll set to null and set to null in group field;
+     */
+    private static void validateEmptyGroupDTOValues(GroupDTO groupDTO, Group group) {
+        if (groupDTO.getGroupCode() != null && groupDTO.getGroupCode().isEmpty()) {
+            groupDTO.setGroupCode(null);
+            group.setGroupCode(null);
+        }
+        if (groupDTO.getGroupName() != null && groupDTO.getGroupName().isEmpty()) {
+            groupDTO.setGroupName(null);
+            group.setGroupName(null);
+        }
+        validateNullGroupDTO(groupDTO, group);
+    }
+
+    /**
+     * Method will set value from student if
+     * studentDTO appropriate field is null
+     */
     private static void validateNullStudDTO(StudentUpdateDTO studentDTO, Student student) {
         if (studentDTO.getId() == null) {
             studentDTO.setId(student.getId());
@@ -58,7 +105,7 @@ public class DTOConverter {
         if (studentDTO.getPhone() == null) {
             studentDTO.setPhone(student.getPhone());
         }
-        if (studentDTO.getGroup() == null) {
+        if (studentDTO.getGroup() == null && student.getGroup() != null) {
             studentDTO.setGroup(convertGroupToDTO(student.getGroup()));
         }
         if (studentDTO.getSex() == null) {
@@ -66,6 +113,10 @@ public class DTOConverter {
         }
     }
 
+    /**
+     * Method will set values from group if
+     * groupDTO appropriate field is null
+     */
     private static void validateNullGroupDTO(GroupDTO groupDTO, Group group) {
         if (groupDTO.getGroupName() == null) {
             groupDTO.setGroupName(group.getGroupName());

@@ -54,7 +54,25 @@ public class StudentService {
                     .message(e)
                     .build();
         }
+    }
 
+    public ReturnMessage updateStudent(Long id, StudentUpdateDTO studentDTO) {
+        Optional<Student> studentOptional = studentRepository.findById(id);
+
+        if (!studentOptional.isPresent()) {
+            return ReturnMessage.builder()
+                    .success(false)
+                    .message("Database didn`t find student with this id!")
+                    .build();
+        }
+        studentDTO.setId(id);
+        Student student = DTOConverter.updateStudentByDTO(studentDTO, studentOptional.get());
+
+        studentRepository.save(student);
+        return ReturnMessage.builder()
+                .success(true)
+                .message(studentDTO)
+                .build();
     }
 
     public long getStudentSubjectCount(Long id) {
@@ -68,4 +86,5 @@ public class StudentService {
     public double getStudentTeachersAverageAge(Long id) {
         return studentRepository.getStudentTeachersAverageAge(id);
     }
+
 }
